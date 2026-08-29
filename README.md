@@ -2,6 +2,12 @@
 
 An AI-powered crochet pattern planner and publishing tool. This full-stack web application leverages generative AI to transform unstructured crafting notes and available supplies into standardized, mistake-free crochet patterns ready for publication on Etsy or personal blogs.
 
+## 🚀 Live Demo
+
+[View Live Deployment (Placeholder)](#) | [Developer Portfolio](#)
+
+---
+
 ## 🛑 Project Status: Scoping & Architecture Phase
 
 This repository is currently in the Product Specification & Architecture Design phase.
@@ -10,9 +16,53 @@ Implementation is scheduled to begin next week.
 
 _Last Updated: August 29, 2026_
 
-## 🚀 Live Demo
+---
 
-[View Live Deployment (Placeholder)](#) | [Developer Portfolio](#)
+## 🗺️ Product Roadmap & Milestones
+
+CraftLoop executes a phased deployment strategy designed to de-risk complex AI text parsing, ensure flawless pattern logic, and ultimately create commercial digital assets optimized for direct-to-consumer marketplaces like Etsy.
+
+```
+┌─────────────────────────────┐ ┌─────────────────────────────┐ ┌─────────────────────────────┐
+│     Phase 1: Validation ──> │ │    Phase 2: Monetize    ──> │ │    Phase 3: Intelligence    │
+│    Schema & React Preview   │ │  PDF Engine & Blog Export   │ │     Yarn Substitutions      │
+└─────────────────────────────┘ └─────────────────────────────┘ └─────────────────────────────┘
+```
+
+### 🟩 Phase 1: Core Engine & Schema Validation (MVP) — _Current Phase_
+
+**Objective:** Solve the primary technical risk—AI stitch hallucination—by locking down rigid schema boundaries and building a highly interactive editing interface.
+
+- [ ] **Zod Schema Architecture:** Define and freeze the multi-level pattern JSON model (validating hook sizes, row sequences, repeats, and end-of-row stitch counts).
+- [ ] **Structured LLM Pipeline:** Implement OpenAI Structured Outputs to enforce that user supply lists and casual notes compile perfectly into the data model.
+- [ ] **Interactive Client Canvas:** Build the React/Next.js frontend pattern previewer using Zustand to manage interactive, checkable row-by-row lists.
+
+### 🟨 Phase 2: Commercialization & High-Fidelity Export (V1.1)
+
+**Objective:** Transform validated patterns into beautiful, downloadable digital products optimized for Etsy store compliance and SEO blog distribution.
+
+- [ ] **Print-Optimized PDF Engine:** Build a server-side Headless Chrome/Puppeteer compilation route that maps pattern JSON into a premium, multiple-page PDF layout with customizable color themes.
+- [ ] **Blog-Ready Markdown Exporter:** Create a specialized copy-paste engine formatting the pattern with semantic headings and abbreviation tables for SEO-friendly crafting blogs.
+- [ ] **Etsy Product Guardrails:** Program automated pattern sanitization rules (e.g., auto-generating a "Materials Needed" cover page) to meet digital download standards.
+
+### 🟦 Phase 3: Marketplace Intelligence & Advanced Features (V2.0)
+
+**Objective:** Introduce proprietary functionality that transitions CraftLoop from a utility script into a defensible B2B2C product.
+
+- [ ] **Smart Yarn Substitution Engine:** Integrate a localized lookup database allowing the AI to recommend exact alternative yarn brands based on matching weights, yards, and fiber content.
+- [ ] **Image Optimization Pipeline:** Build an asset upload pipeline to let creators seamlessly anchor their own progress photos to specific pattern rows before exporting to PDF.
+
+### 🟪 Phase 4: Ecosystem
+
+**Objective:** Expand CraftLoop from a single-user tool into a publishing and growth platform for crafters.
+
+- [ ] One-click Etsy-ready PDF formatting and export
+- [ ] SEO-optimized blog/Markdown publishing templates
+- [ ] Usage analytics dashboard (most-used stitches, popular patterns)
+- [ ] Social/YouTube description generator for pattern videos
+- [ ] Pattern sharing and community discovery features (e.g. Ravelry integration)
+
+---
 
 ## 📋 Features
 
@@ -60,6 +110,8 @@ This project is built using React and Next.js to demonstrate proficiency in indu
 2. **Validation**: The server hits the OpenAI API passing a rigid Zod schema that mandates an exact pattern structure.
 3. **Hydration**: The validated JSON response streams back to the React app, populating a client-side layout where users can check off rows dynamically.
 4. **Compilation**: Upon export, the server compiles the template into a clean Markdown block or passes it to a PDF builder stream.
+
+---
 
 ## 🧠 Engineering Highlights & Technical Challenges
 
