@@ -1,2 +1,6 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script>
+	import Login from './login.svelte';
+</script>
+
+<h1 class="mx-16 my-16 text-4xl">craftloop</h1>
+<Login />
