@@ -1,14 +1,10 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
+	import { browser } from '$app/environment';
+
 	let username = $state('');
 	let password = $state('');
-
-	function handleSubmit() {
-		console.log('Logging in with:', { username, password });
-		// update with request to node.js backend
-		sendData();
-	}
-
 	let responseMessage = $state('Loading...');
 	let errorMessage = $state('');
 
@@ -26,9 +22,12 @@
 			responseMessage = data.message;
 			if (response.ok) {
 				// Redirect to the dashboard route upon success
-				goto('/projects');
+				if (browser) {
+					localStorage.setItem('token', data.token);
+				}
+				goto(resolve('/projects'));
 			} else {
-				errorMessage = 'Invalid credentials';
+				errorMessage = 'Invalid username or password. Try again.';
 				console.log(responseMessage);
 			}
 		} catch (error) {
@@ -41,7 +40,7 @@
 <div class="flex justify-center bg-gray-50 p-4">
 	<div class="w-full max-w-sm rounded-xl border border-gray-100 bg-white p-6 shadow-md">
 		<h2 class="mb-6 text-center text-xl font-bold text-gray-900">Sign In</h2>
-		<form onsubmit={handleSubmit} class="space-y-4">
+		<form onsubmit={sendData} class="space-y-4">
 			<div>
 				<label
 					for="username"
