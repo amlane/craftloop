@@ -1,4 +1,5 @@
 <script>
+	import { goto } from '$app/navigation';
 	let username = $state('');
 	let password = $state('');
 
@@ -9,6 +10,7 @@
 	}
 
 	let responseMessage = $state('Loading...');
+	let errorMessage = $state('');
 
 	async function sendData() {
 		try {
@@ -22,7 +24,13 @@
 
 			const data = await response.json();
 			responseMessage = data.message;
-			console.log(responseMessage);
+			if (response.ok) {
+				// Redirect to the dashboard route upon success
+				goto('/projects');
+			} else {
+				errorMessage = 'Invalid credentials';
+				console.log(responseMessage);
+			}
 		} catch (error) {
 			responseMessage = 'Error sending data.';
 			console.error(error);
@@ -72,6 +80,9 @@
 			>
 				Sign In
 			</button>
+			{#if errorMessage}
+				<span style="color:red;">{errorMessage}</span>
+			{/if}
 		</form>
 	</div>
 </div>
