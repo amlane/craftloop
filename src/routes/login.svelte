@@ -1,18 +1,39 @@
 <script>
-	let username = '';
-	let password = '';
+	let username = $state('');
+	let password = $state('');
 
 	function handleSubmit() {
 		console.log('Logging in with:', { username, password });
 		// update with request to node.js backend
+		sendData();
+	}
+
+	let responseMessage = $state('Loading...');
+
+	async function sendData() {
+		try {
+			const response = await fetch('http://localhost:8000/api/auth/login', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify({ username: username, password: password }) // Must stringify the body
+			});
+
+			const data = await response.json();
+			responseMessage = data.message;
+			console.log(responseMessage);
+		} catch (error) {
+			responseMessage = 'Error sending data.';
+			console.error(error);
+		}
 	}
 </script>
 
 <div class="flex justify-center bg-gray-50 p-4">
 	<div class="w-full max-w-sm rounded-xl border border-gray-100 bg-white p-6 shadow-md">
 		<h2 class="mb-6 text-center text-xl font-bold text-gray-900">Sign In</h2>
-
-		<form on:submit|preventDefault={handleSubmit} class="space-y-4">
+		<form onsubmit={handleSubmit} class="space-y-4">
 			<div>
 				<label
 					for="username"
