@@ -1,0 +1,135 @@
+@media (prefers-color-scheme: dark) {
+	:root:not([data-theme='light']) {
+		--paper: #211c15;
+		--card: #2b241a;
+		--ink: #f3ecdd;
+		--ink-soft: #b9aa8d;
+		--line: #423a2b;
+		--line-soft: #332c20;
+		--coral: #f0774e;
+		--coral-ink: #241209;
+		--teal: #4fc3b2;
+		--mustard: #e8b94a;
+		--plum: #c084b0;
+		--danger: #e88372;
+		--focus: #4fc3b2;
+	}
+}
+
+:root {
+	--main-font: 'Karla', sans-serif;
+	--paper: #f5efdc;
+	--card: #fffcf4;
+	--ink: #2b2318;
+	--ink-soft: #6b5f4e;
+	--line: #ded0ae;
+	--line-soft: #eae0c4;
+	--coral: #e1552f;
+	--coral-ink: #fff8f2;
+	--teal: #1b7368;
+	--mustard: #b9791a;
+	--plum: #7a3f68;
+	--danger: #b23a2e;
+	--focus: #1b7368;
+	--shadow: 0 1px 0 var(--line);
+}
+
+.border-red {
+	border: 1px solid red;
+}
+
+* {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	font-family: var(--main-font);
+	background: var(--paper);
+	color: var(--ink-soft);
+}
+
+h1 {
+	margin: 0;
+	padding: 0;
+}
+
+a:link {
+	text-decoration: underline;
+}
+
+.title-text {
+	color: var(--ink);
+}
+
+.border-primary {
+	border: 1px solid var(--line);
+}
+
+.brand {
+	display: flex;
+	align-items: center;
+	gap: 10px;
+	margin-right: auto;
+}
+
+.brand svg {
+	width: 30px;
+	height: 30px;
+	flex-shrink: 0;
+}
+
+.brand-text .name {
+	font-size: 1.85rem;
+	letter-spacing: -0.01em;
+	color: var(--ink);
+	margin-top: -10px;
+}
+
+.brand-text .tag {
+	font-size: 0.72rem;
+	color: var(--ink-soft);
+	letter-spacing: 0.03em;
+	margin-top: -10px;
+}
+
+button {
+	font-family: inherit;
+}
+
+.btn {
+	border: 1px solid var(--line);
+	background: var(--card);
+	color: var(--ink);
+	font-size: 0.9rem;
+	font-weight: 600;
+	padding: 9px 16px;
+	border-radius: 8px;
+	cursor: pointer;
+	display: inline-flex;
+	align-items: center;
+	gap: 7px;
+	transition:
+		transform 0.08s ease,
+		border-color 0.15s ease;
+}
+
+.btn-primary {
+	background: var(--coral);
+	border-color: var(--coral);
+	color: var(--coral-ink);
+}
+
+input {
+	padding: 9px 12px;
+	border-radius: 8px;
+	border: 1px solid var(--line);
+	background: var(--card);
+	color: var(--ink);
+	font-size: 0.92rem;
+}
+
+input:focus {
+	border-color: var(--focus);
+	outline: none;
+}
