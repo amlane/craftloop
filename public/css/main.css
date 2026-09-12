@@ -47,7 +47,7 @@ body {
 	font-family: var(--main-font);
 	background: var(--paper);
 	color: var(--ink-soft);
-	padding-inline: 20px;
+	padding-inline: 30px;
 }
 
 h1 {
@@ -142,7 +142,7 @@ input {
 }
 
 input:focus {
-	border-color: var(--focus);
+	border-color: var(--focus) !important;
 	outline: none;
 }
 
@@ -154,8 +154,8 @@ input:focus {
 }
 
 .projects svg {
-	width: 100px;
-	height: 100px;
+	width: 60px;
+	height: 60px;
 }
 
 .filterbar {
@@ -182,6 +182,16 @@ input:focus {
 	font-size: 0.92rem;
 }
 
+.search svg {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	width: 16px;
+	height: 16px;
+	color: var(--ink-soft);
+}
+
 .chip {
 	border: 1px solid var(--line);
 	background: var(--card);
@@ -193,6 +203,7 @@ input:focus {
 	cursor: pointer;
 	white-space: nowrap;
 	flex-shrink: 0;
+	margin-left: 8px;
 }
 
 .chip .dot {

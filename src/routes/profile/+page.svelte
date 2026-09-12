@@ -46,21 +46,34 @@
 	});
 </script>
 
-<header class="top-bar mt-6 mb-4">
-	<div class="brand flex justify-between">
-		<Brand />
-		<div class="flex items-center">
-			<a class="btn btn-primary mr-2" id="newBtn" href="/projects"> Back to Projects </a>
-			<button onclick={logout} class="logout btn btn-secondary" id="logoutBtn">Logout</button>
+<div class="app">
+	<header class="top-bar mt-6 mb-4">
+		<div class="brand flex justify-between">
+			<Brand />
+			<div class="flex items-center">
+				<a class="btn btn-primary mr-2" id="newBtn" href="/projects"> Back to Projects </a>
+				<button onclick={logout} class="logout btn btn-secondary" id="logoutBtn">Logout</button>
+			</div>
 		</div>
-	</div>
-</header>
-<div class="pb-4">
-	<p class="title-text">Username</p>
-	<p>{username}</p>
+	</header>
+	{#if loading}
+		<p>Loading...</p>
+	{:else}
+		<div class="pt-8">
+			<div class="mb-4">
+				<p class="title-text">Username</p>
+				<p>{username}</p>
+			</div>
+			<div class="mb-4">
+				<p class="title-text">Email</p>
+				<p>{email}</p>
+			</div>
+			<div class="mb-4">
+				<button class="btn btn-secondary">Change Password</button>
+			</div>
+			<div>
+				<button class="btn btn-primary">Delete Account</button>
+			</div>
+		</div>
+	{/if}
 </div>
-<div class="pb-4">
-	<p class="title-text">Email</p>
-	<p>{email}</p>
-</div>
-<p class="title-text">Change Password</p>
