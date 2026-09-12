@@ -54,8 +54,13 @@ h1 {
 	padding: 0;
 }
 
-a:link {
+a:link,
+#logoutBtn {
 	text-decoration: underline;
+}
+
+#logoutBtn:hover {
+	cursor: pointer;
 }
 
 .title-text {
@@ -101,7 +106,7 @@ button {
 	border: 1px solid var(--line);
 	background: var(--card);
 	color: var(--ink);
-	font-size: 0.9rem;
+	font-size: 1rem;
 	font-weight: 600;
 	padding: 9px 16px;
 	border-radius: 8px;
@@ -118,6 +123,11 @@ button {
 	background: var(--coral);
 	border-color: var(--coral);
 	color: var(--coral-ink);
+}
+
+#newBtn svg {
+	height: 15px;
+	width: 15px;
 }
 
 input {

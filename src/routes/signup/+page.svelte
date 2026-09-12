@@ -87,7 +87,7 @@
 					placeholder="••••••••"
 				/>
 			</div>
-			<button type="submit" class="btn btn-primary mt-4 flex w-full justify-center">
+			<button type="submit" class="btn btn-primary mt-4 flex w-full justify-center" id="signUpBtn">
 				Create Account
 			</button>
 			{#if errorMessage}

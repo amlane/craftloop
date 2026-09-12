@@ -5,7 +5,7 @@
 
 	let username = $state('');
 	let password = $state('');
-	let responseMessage = $state('Loading...');
+	let responseMessage = $state('');
 	let errorMessage = $state('');
 
 	async function sendData() {
@@ -67,7 +67,7 @@
 					placeholder="••••••••"
 				/>
 			</div>
-			<button type="submit" class="btn btn-primary mt-4 flex w-full justify-center">
+			<button type="submit" class="btn btn-primary mt-4 flex w-full justify-center" id="signInBtn">
 				Sign In
 			</button>
 			{#if errorMessage}
