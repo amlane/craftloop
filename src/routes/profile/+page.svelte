@@ -68,11 +68,9 @@
 				<p class="title-text">Email</p>
 				<p>{email}</p>
 			</div>
-			<div class="mb-4">
-				<button class="btn btn-secondary">Change Password</button>
-			</div>
-			<div>
-				<button class="btn btn-primary">Delete Account</button>
+			<div class="mt-8 mb-4">
+				<button class="btn btn-primary mr-2">Change Password</button>
+				<button class="btn btn-secondary">Delete Account</button>
 			</div>
 		</div>
 	{/if}
