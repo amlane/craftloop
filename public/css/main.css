@@ -43,11 +43,11 @@
 	box-sizing: border-box;
 }
 
-html,
 body {
 	font-family: var(--main-font);
 	background: var(--paper);
 	color: var(--ink-soft);
+	padding-inline: 20px;
 }
 
 h1 {
@@ -55,13 +55,8 @@ h1 {
 	padding: 0;
 }
 
-a:link,
-#logoutBtn {
+.styled-link {
 	text-decoration: underline;
-}
-
-#logoutBtn:hover {
-	cursor: pointer;
 }
 
 .title-text {
@@ -126,6 +121,12 @@ button {
 	color: var(--coral-ink);
 }
 
+.btn-secondary {
+	background: var(--line);
+	border-color: var(--line);
+	color: var(--ink);
+}
+
 #newBtn svg {
 	height: 15px;
 	width: 15px;
@@ -155,4 +156,50 @@ input:focus {
 .projects svg {
 	width: 100px;
 	height: 100px;
+}
+
+.filterbar {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	padding-block: 2px 18px;
+	flex-wrap: wrap;
+}
+
+.search {
+	flex: 1 1 220px;
+	min-width: 160px;
+	position: relative;
+}
+
+.search input {
+	width: 100%;
+	padding: 9px 12px 9px 34px;
+	border-radius: 8px;
+	border: 1px solid var(--line);
+	background: var(--card);
+	color: var(--ink);
+	font-size: 0.92rem;
+}
+
+.chip {
+	border: 1px solid var(--line);
+	background: var(--card);
+	color: var(--ink-soft);
+	padding: 7px 13px;
+	border-radius: 99px;
+	font-size: 0.82rem;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+	flex-shrink: 0;
+}
+
+.chip .dot {
+	display: inline-block;
+	width: 7px;
+	height: 7px;
+	border-radius: 50%;
+	margin-right: 6px;
+	vertical-align: middle;
 }

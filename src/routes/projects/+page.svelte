@@ -5,24 +5,38 @@
 
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
-
-	function logout() {
-		localStorage.removeItem('token');
-		goto(resolve('/'));
-	}
 </script>
 
-<button onclick={logout} class="fixed top-0 right-0 pr-4 text-sm" id="logoutBtn">logout</button>
-<header class="top-bar mx-12 mt-8 mb-4">
+<header class="top-bar mt-6 mb-4">
 	<div class="brand flex justify-between">
 		<Brand />
-		<button class="btn btn-primary" id="newBtn">
-			<PlusIcon />
-			New pattern
-		</button>
+		<div class="flex items-center">
+			<button class="btn btn-primary mr-2" id="newBtn">
+				<PlusIcon />
+				New pattern
+			</button>
+			<a class="btn btn-secondary" id="newBtn" href="/profile">Profile</a>
+		</div>
 	</div>
 </header>
-<div class="projects flex justify-center">
+<div class="projects flex flex-col justify-center">
+	<div class="filterbar">
+		<div class="search">
+			<input id="searchInput" type="text" placeholder="Search patterns, yarn, tags…" value="" />
+		</div>
+		<div class="chips" id="filterChips">
+			<button class="chip" data-key="all" aria-pressed="false">All</button><button
+				class="chip"
+				data-key="draft"
+				aria-pressed="false"
+				><span class="dot" style="background:var(--mustard)"></span>Draft</button
+			><button class="chip" data-key="tested" aria-pressed="false"
+				><span class="dot" style="background:var(--teal)"></span>Tested</button
+			><button class="chip" data-key="etsy" aria-pressed="true"
+				><span class="dot" style="background:var(--plum)"></span>Etsy-ready</button
+			>
+		</div>
+	</div>
 	<div class="empty flex flex-col items-center justify-center py-16 text-center">
 		<BrandIcon fill="gray" />
 		<h2 class="title-text pb-4 text-2xl font-bold">Your pattern box is empty</h2>

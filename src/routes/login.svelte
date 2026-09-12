@@ -73,7 +73,7 @@
 			{#if errorMessage}
 				<span style="color:red;">{errorMessage}</span>
 			{/if}
-			<p>Don't have an account? <a href="/signup">Sign up</a>.</p>
+			<p>Don't have an account? <a href="/signup" class="styled-link">Sign up</a>.</p>
 		</form>
 	</div>
 </div>
