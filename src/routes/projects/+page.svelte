@@ -13,10 +13,10 @@
 		<div class="brand flex justify-between">
 			<Brand />
 			<div class="flex items-center">
-				<button class="btn btn-primary mr-2" id="newBtn">
+				<a class="btn btn-primary mr-2" id="newBtn" href="/pattern">
 					<PlusIcon />
 					New pattern
-				</button>
+				</a>
 				<a class="btn btn-secondary" id="newBtn" href="/profile">Profile</a>
 			</div>
 		</div>
@@ -47,7 +47,7 @@
 				Every pattern you design — gauge, hook, row-by-row — kept in one place instead of a notebook
 				you'll misplace. Start with your next project, or edit the example below.
 			</p>
-			<button class="btn btn-primary" id="newBtn">Start a Pattern</button>
+			<a class="btn btn-primary" id="newBtn" href="/pattern">Start a Pattern</a>
 		</div>
 	</div>
 </div>

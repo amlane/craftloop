@@ -127,6 +127,58 @@ button {
 	color: var(--ink);
 }
 
+.btn-ghost {
+	background: transparent;
+	border-color: transparent;
+	color: var(--ink-soft);
+}
+
+.btn-ghost:hover {
+	color: var(--ink);
+	border-color: var(--line);
+}
+
+.btn-danger {
+	background: transparent;
+	border-color: var(--danger);
+	color: var(--danger);
+}
+
+.btn-danger:hover {
+	background: var(--danger);
+	color: var(--card);
+}
+
+.btn-sm {
+	padding: 6px 11px;
+	font-size: 0.8rem;
+	border-radius: 7px;
+}
+
+.btn:hover {
+	border-color: var(--ink-soft);
+}
+
+.btn:active {
+	transform: translateY(1px);
+}
+
+.btn:disabled {
+	opacity: 0.45;
+	cursor: not-allowed;
+}
+
+.display {
+	font-family: 'Fraunces', Georgia, serif;
+	font-weight: 600;
+	text-wrap: balance;
+}
+
+.mono {
+	font-family: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+	font-variant-numeric: tabular-nums;
+}
+
 #newBtn svg {
 	height: 15px;
 	width: 15px;
