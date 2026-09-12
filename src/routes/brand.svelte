@@ -4,7 +4,7 @@
 
 <div class="flex items-center justify-center">
 	<div class="mr-2">
-		<BrandIcon />
+		<BrandIcon fill="coral" />
 	</div>
 	<div class="brand-text">
 		<h1 class="name display">craftloop</h1>

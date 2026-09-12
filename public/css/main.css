@@ -13,6 +13,7 @@
 		--plum: #c084b0;
 		--danger: #e88372;
 		--focus: #4fc3b2;
+		--gray: gray;
 	}
 }
 
@@ -106,7 +107,7 @@ button {
 	border: 1px solid var(--line);
 	background: var(--card);
 	color: var(--ink);
-	font-size: 1rem;
+	font-size: 0.9rem;
 	font-weight: 600;
 	padding: 9px 16px;
 	border-radius: 8px;
@@ -142,4 +143,16 @@ input {
 input:focus {
 	border-color: var(--focus);
 	outline: none;
+}
+
+.projects .empty {
+	max-width: 380px;
+	margin: 0 auto 18px;
+	font-size: 0.92rem;
+	line-height: 1.5;
+}
+
+.projects svg {
+	width: 100px;
+	height: 100px;
 }
