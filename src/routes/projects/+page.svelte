@@ -5,7 +5,39 @@
 
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { onMount } from 'svelte';
+	import { browser } from '$app/environment';
 	import SearchIcon from '../search-icon.svelte';
+	let data = $state(null);
+	onMount(() => {
+		if (browser) {
+			const jwtToken = localStorage.getItem('token');
+			if (jwtToken) {
+				async function fetchData() {
+					try {
+						// TODO - /users/me/patterns endpoint/temp solution decode jwt on client side for user id
+						// maybe /api/patterns should just always only return your patterns using JWT?
+						const userId = JSON.parse(atob(jwtToken.split('.')[1]))['subject'];
+						console.log('token', JSON.parse(atob(jwtToken.split('.')[1])).subject);
+						const response = await fetch(`http://localhost:8000/api/users/${userId}/patterns`, {
+							method: 'GET',
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: 'Bearer ' + jwtToken
+							}
+						});
+
+						data = await response.json();
+						console.log(data);
+					} catch (error) {
+						console.error('Failed to fetch:', error);
+					}
+				}
+
+				fetchData();
+			}
+		}
+	});
 </script>
 
 <div class="app">

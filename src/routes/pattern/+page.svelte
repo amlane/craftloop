@@ -1,4 +1,5 @@
 <script>
+	import { browser } from '$app/environment';
 	import Brand from '../brand.svelte';
 	import ChevronLeftIcon from '../chevron-left-icon.svelte';
 
@@ -103,12 +104,35 @@
 		if (removed) URL.revokeObjectURL(removed.url);
 	}
 
-	function handleSave() {
-		// TODO: POST the draft to the patterns API once it's ready.
+	async function handleSave() {
+		// TODO: Handle PUT on updates
 		saveStatus = 'saving';
-		setTimeout(() => {
-			saveStatus = 'saved';
-		}, 500);
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const response = await fetch('http://localhost:8000/api/patterns', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + jwt
+				},
+				body: JSON.stringify(pattern) // Must stringify the body
+			});
+
+			const data = await response.json();
+			if (response.ok) {
+				// Redirect to the dashboard route upon success
+				saveStatus = 'Saved';
+				console.log(data);
+			} else {
+				console.log('Error saving pattern: ', data);
+			}
+		} catch (error) {
+			console.error(error);
+			saveStatus = 'Error saving. Try again.';
+		}
 	}
 
 	function handleDelete() {
