@@ -3,6 +3,8 @@
 
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 	import Brand from '../../brand.svelte';
 	import ChevronLeftIcon from '../../chevron-left-icon.svelte';
 
@@ -163,9 +165,32 @@
 		}
 	}
 
-	function handleDelete() {
-		// TODO: call the delete-pattern endpoint once patterns can be persisted.
+	async function handleDelete() {
 		confirmingDelete = false;
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const response = await fetch(`http://localhost:8000/api/patterns/${pattern.id}`, {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + jwt
+				}
+			});
+
+			if (response.ok) {
+				confirmingDelete = true;
+				// redirect user back to projects route
+				goto(resolve('/projects'));
+			} else {
+				console.log('Error deleting pattern: ', resData);
+			}
+		} catch (error) {
+			console.error(error);
+			saveStatus = 'Error saving. Try again.';
+		}
 	}
 </script>
 

@@ -17,8 +17,6 @@
 			if (jwtToken) {
 				async function fetchData() {
 					try {
-						// TODO - /users/me/patterns endpoint/temp solution decode jwt on client side for user id
-						// maybe /api/patterns should just always only return your patterns using JWT?
 						const userId = JSON.parse(atob(jwtToken.split('.')[1]))['subject'];
 						const response = await fetch(`http://localhost:8000/api/users/${userId}/patterns`, {
 							method: 'GET',
@@ -109,7 +107,7 @@
 		<div class="brand flex justify-between">
 			<Brand />
 			<div class="flex items-center">
-				<button class="btn btn-primary mr-2" id="newBtn" onclick={createNewPattern()}>
+				<button class="btn btn-primary mr-2" id="newBtn" onclick={createNewPattern}>
 					<PlusIcon />
 					New pattern
 				</button>
@@ -136,7 +134,7 @@
 				>
 			</div>
 		</div>
-		{#if loading}
+		{#if loading || patternData.length === 0}
 			<div class="empty flex flex-col items-center justify-center py-16 text-center">
 				<BrandIcon fill="gray" />
 				<h2 class="title-text pb-4 text-2xl font-bold">Your pattern box is empty</h2>
@@ -144,7 +142,7 @@
 					Every pattern you design — gauge, hook, row-by-row — kept in one place instead of a
 					notebook you'll misplace. Start with your next project, or edit the example below.
 				</p>
-				<button class="btn btn-primary" id="newBtn" onclick={createNewPattern()}
+				<button class="btn btn-primary" id="newBtn" onclick={createNewPattern}
 					>Start a Pattern</button
 				>
 			</div>
