@@ -1,7 +1,10 @@
 <script>
+	let { data } = $props();
+
 	import { browser } from '$app/environment';
-	import Brand from '../brand.svelte';
-	import ChevronLeftIcon from '../chevron-left-icon.svelte';
+	import { onMount } from 'svelte';
+	import Brand from '../../brand.svelte';
+	import ChevronLeftIcon from '../../chevron-left-icon.svelte';
 
 	const WEIGHTS = [
 		'Lace (0)',
@@ -52,6 +55,33 @@
 		sections: [],
 		notes: '',
 		photos: []
+	});
+
+	onMount(() => {
+		if (browser) {
+			const jwtToken = localStorage.getItem('token');
+			if (jwtToken) {
+				async function fetchData() {
+					try {
+						const response = await fetch(`http://localhost:8000/api/patterns/${data.patternId}`, {
+							method: 'GET',
+							headers: {
+								'Content-Type': 'application/json',
+								Authorization: 'Bearer ' + jwtToken
+							}
+						});
+
+						data = await response.json();
+					} catch (error) {
+						console.error('Failed to fetch:', error);
+					} finally {
+						pattern = data;
+					}
+				}
+
+				fetchData();
+			}
+		}
 	});
 
 	let tagInput = $state('');
@@ -112,8 +142,8 @@
 			if (browser) {
 				jwt = localStorage.getItem('token');
 			}
-			const response = await fetch('http://localhost:8000/api/patterns', {
-				method: 'POST',
+			const response = await fetch(`http://localhost:8000/api/patterns/${pattern.id}`, {
+				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + jwt
@@ -121,13 +151,11 @@
 				body: JSON.stringify(pattern) // Must stringify the body
 			});
 
-			const data = await response.json();
+			const resData = await response.json();
 			if (response.ok) {
-				// Redirect to the dashboard route upon success
 				saveStatus = 'Saved';
-				console.log(data);
 			} else {
-				console.log('Error saving pattern: ', data);
+				console.log('Error saving pattern: ', resData);
 			}
 		} catch (error) {
 			console.error(error);

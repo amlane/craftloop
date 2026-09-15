@@ -29,7 +29,6 @@
 						});
 
 						data = await response.json();
-						console.log(data);
 					} catch (error) {
 						console.error('Failed to fetch:', error);
 					} finally {
@@ -76,6 +75,33 @@
 		const b = colors[Math.abs(h >> 3) % colors.length];
 		return `repeating-linear-gradient(45deg, ${a}22, ${a}22 10px, ${b}18 10px, ${b}18 20px)`;
 	}
+
+	async function createNewPattern() {
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const response = await fetch('http://localhost:8000/api/patterns', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Authorization: 'Bearer ' + jwt
+				},
+				body: JSON.stringify({}) // Create empty pattern with default values
+			});
+
+			const resData = await response.json();
+			if (response.ok) {
+				// Redirect to the pattern/:id route for edits
+				goto(resolve(`/pattern/${resData.id}`));
+			} else {
+				console.log('Error saving pattern: ', resData);
+			}
+		} catch (error) {
+			console.error(error);
+		}
+	}
 </script>
 
 <div class="app">
@@ -83,10 +109,10 @@
 		<div class="brand flex justify-between">
 			<Brand />
 			<div class="flex items-center">
-				<a class="btn btn-primary mr-2" id="newBtn" href="/pattern">
+				<button class="btn btn-primary mr-2" id="newBtn" onclick={createNewPattern()}>
 					<PlusIcon />
 					New pattern
-				</a>
+				</button>
 				<a class="btn btn-secondary" id="newBtn" href="/profile">Profile</a>
 			</div>
 		</div>
@@ -105,7 +131,7 @@
 					><span class="dot" style="background:var(--mustard)"></span>Draft</button
 				><button class="chip" data-key="tested" aria-pressed="false"
 					><span class="dot" style="background:var(--teal)"></span>Tested</button
-				><button class="chip" data-key="etsy" aria-pressed="true"
+				><button class="chip" data-key="done" aria-pressed="true"
 					><span class="dot" style="background:var(--plum)"></span>Done</button
 				>
 			</div>
@@ -118,12 +144,14 @@
 					Every pattern you design — gauge, hook, row-by-row — kept in one place instead of a
 					notebook you'll misplace. Start with your next project, or edit the example below.
 				</p>
-				<a class="btn btn-primary" id="newBtn" href="/pattern">Start a Pattern</a>
+				<button class="btn btn-primary" id="newBtn" onclick={createNewPattern()}
+					>Start a Pattern</button
+				>
 			</div>
 		{:else}
 			<div class="grid">
 				{#each patternData as p (p.id)}
-					<a class="card" href="/pattern">
+					<a class="card" href="/pattern/{p.id}">
 						<div class="card-photo">
 							{#if p.photos?.[0]?.url}
 								<img src={p.photos[0].url} alt="" />
