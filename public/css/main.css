@@ -205,7 +205,8 @@ input:focus {
 	line-height: 1.5;
 }
 
-.projects svg {
+.projects svg,
+.error-container svg {
 	width: 60px;
 	height: 60px;
 }

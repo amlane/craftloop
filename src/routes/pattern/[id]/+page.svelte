@@ -1,10 +1,10 @@
 <script>
-	let { data } = $props();
-
 	import { browser } from '$app/environment';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
+
 	import Brand from '../../brand.svelte';
 	import ChevronLeftIcon from '../../chevron-left-icon.svelte';
 
@@ -60,12 +60,15 @@
 	});
 
 	onMount(() => {
+		let data = $state({});
 		if (browser) {
 			const jwtToken = localStorage.getItem('token');
 			if (jwtToken) {
 				async function fetchData() {
 					try {
-						const response = await fetch(`http://localhost:8000/api/patterns/${data.patternId}`, {
+						const patternId = page.params.id;
+						console.log('pattern id: ', page.params.id);
+						const response = await fetch(`http://localhost:8000/api/patterns/${patternId}`, {
 							method: 'GET',
 							headers: {
 								'Content-Type': 'application/json',
@@ -74,6 +77,10 @@
 						});
 
 						data = await response.json();
+						if (response.status === 404) {
+							goto(resolve('/404'), { replaceState: true });
+							return;
+						}
 					} catch (error) {
 						console.error('Failed to fetch:', error);
 					} finally {
