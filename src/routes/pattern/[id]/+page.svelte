@@ -185,7 +185,7 @@
 				// redirect user back to projects route
 				goto(resolve('/projects'));
 			} else {
-				console.log('Error deleting pattern: ', resData);
+				console.log('Response: ', response);
 			}
 		} catch (error) {
 			console.error(error);
