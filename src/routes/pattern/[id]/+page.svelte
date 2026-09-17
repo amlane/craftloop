@@ -59,6 +59,30 @@
 		photos: []
 	});
 
+	// Treats null/undefined the same as '' before comparing. The API can
+	// return null for an unset text field, but clearing that field's input
+	// always writes back '' — without this, that'd read as a permanent
+	// unsaved change even though the field is back to how it loaded.
+	function normalize(value) {
+		if (value === null || value === undefined) return '';
+		if (Array.isArray(value)) return value.map(normalize);
+		if (typeof value === 'object') {
+			const out = {};
+			for (const key of Object.keys(value).sort()) out[key] = normalize(value[key]);
+			return out;
+		}
+		return value;
+	}
+
+	function snapshotOf(value) {
+		return JSON.stringify(normalize(value));
+	}
+
+	// Snapshot of `pattern` as it exists on the server — set whenever we load
+	// or successfully save. Comparing the live `pattern` against this is how
+	// we know there are unsaved edits, instead of guessing from a flag.
+	let savedSnapshot = $state(snapshotOf(pattern));
+
 	onMount(() => {
 		let data = $state({});
 		if (browser) {
@@ -84,6 +108,7 @@
 						console.error('Failed to fetch:', error);
 					} finally {
 						pattern = data;
+						savedSnapshot = snapshotOf(data);
 					}
 				}
 
@@ -94,7 +119,17 @@
 
 	let tagInput = $state('');
 	let confirmingDelete = $state(false);
-	let saveStatus = $state('idle'); // idle | saving | saved
+	let saveState = $state('idle'); // idle | saving | error
+	let hasUnsavedChanges = $derived(snapshotOf(pattern) !== savedSnapshot);
+	let saveStatusClass = $derived(
+		saveState === 'saving'
+			? 'saving'
+			: saveState === 'error'
+				? 'error'
+				: hasUnsavedChanges
+					? 'unsaved'
+					: 'saved'
+	);
 
 	function addTag(e) {
 		if (e.key !== 'Enter') return;
@@ -143,30 +178,33 @@
 	}
 
 	async function handleSave() {
-		saveStatus = 'saving';
+		saveState = 'saving';
 		try {
 			let jwt = '';
 			if (browser) {
 				jwt = localStorage.getItem('token');
 			}
+			const payload = JSON.stringify(pattern);
 			const response = await fetch(`http://localhost:8000/api/patterns/${pattern.id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
 					Authorization: 'Bearer ' + jwt
 				},
-				body: JSON.stringify(pattern) // Must stringify the body
+				body: payload
 			});
 
 			const resData = await response.json();
 			if (response.ok) {
-				saveStatus = 'saved';
+				saveState = 'idle';
+				savedSnapshot = snapshotOf(pattern);
 			} else {
+				saveState = 'error';
 				console.log('Error saving pattern: ', resData);
 			}
 		} catch (error) {
 			console.error(error);
-			saveStatus = 'Error saving. Try again.';
+			saveState = 'error';
 		}
 	}
 
@@ -186,7 +224,6 @@
 			});
 
 			if (response.ok) {
-				confirmingDelete = true;
 				// redirect user back to projects route
 				goto(resolve('/projects'));
 			} else {
@@ -194,7 +231,7 @@
 			}
 		} catch (error) {
 			console.error(error);
-			saveStatus = 'Error saving. Try again.';
+			saveState = 'error';
 		}
 	}
 </script>
@@ -407,14 +444,16 @@
 
 	<div class="savebar">
 		<div class="savebar-inner">
-			<span class="save-status {saveStatus}">
+			<span class="save-status {saveStatusClass}">
 				<span class="dot"></span>
-				{#if saveStatus === 'saving'}
+				{#if saveState === 'saving'}
 					Saving…
-				{:else if saveStatus === 'saved'}
-					Saved
-				{:else}
+				{:else if saveState === 'error'}
+					Couldn't save — try again
+				{:else if hasUnsavedChanges}
 					Unsaved changes
+				{:else}
+					Saved
 				{/if}
 			</span>
 			<button class="btn btn-primary" onclick={handleSave}>Save</button>
@@ -900,6 +939,9 @@
 	}
 	.save-status.saving .dot {
 		background: var(--mustard);
+	}
+	.save-status.error .dot {
+		background: var(--danger);
 	}
 
 	@media (max-width: 640px) {
