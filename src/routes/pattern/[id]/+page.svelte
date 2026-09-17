@@ -67,7 +67,6 @@
 				async function fetchData() {
 					try {
 						const patternId = page.params.id;
-						console.log('pattern id: ', page.params.id);
 						const response = await fetch(`http://localhost:8000/api/patterns/${patternId}`, {
 							method: 'GET',
 							headers: {
@@ -144,7 +143,6 @@
 	}
 
 	async function handleSave() {
-		// TODO: Handle PUT on updates
 		saveStatus = 'saving';
 		try {
 			let jwt = '';
@@ -162,7 +160,7 @@
 
 			const resData = await response.json();
 			if (response.ok) {
-				saveStatus = 'Saved';
+				saveStatus = 'saved';
 			} else {
 				console.log('Error saving pattern: ', resData);
 			}
