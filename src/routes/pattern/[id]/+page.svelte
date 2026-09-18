@@ -81,6 +81,7 @@
 	// Snapshot of `pattern` as it exists on the server — set whenever we load
 	// or successfully save. Comparing the live `pattern` against this is how
 	// we know there are unsaved edits, instead of guessing from a flag.
+	// svelte-ignore state_referenced_locally
 	let savedSnapshot = $state(snapshotOf(pattern));
 
 	onMount(() => {
