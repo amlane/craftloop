@@ -9,6 +9,7 @@
 	import { browser } from '$app/environment';
 	import SearchIcon from '../search-icon.svelte';
 	let data = $state.snapshot(null);
+	let allPatterns = $state([]);
 	let patternData = $state([]);
 	let loading = $state(true);
 	onMount(() => {
@@ -31,6 +32,7 @@
 						console.error('Failed to fetch:', error);
 					} finally {
 						patternData = data.user.patterns;
+						allPatterns = data.user.patterns;
 						loading = false;
 					}
 				}
@@ -39,6 +41,15 @@
 			}
 		}
 	});
+
+	let searchText = $state('');
+
+	function filterPatterns() {
+		let q = event.target.value.toLowerCase().trim();
+		patternData = allPatterns.filter((val) => {
+			return [val.title, val.yarnWeight, ...(val.tags ?? [])].join(' ').toLowerCase().includes(q);
+		});
+	}
 
 	function timeAgo(timestamp) {
 		const now = new Date();
@@ -119,7 +130,13 @@
 		<div class="filterbar">
 			<div class="search">
 				<SearchIcon />
-				<input id="searchInput" type="text" placeholder="Search patterns, yarn, tags…" value="" />
+				<input
+					id="searchInput"
+					type="text"
+					placeholder="Search patterns, yarn, tags…"
+					value={searchText}
+					oninput={filterPatterns}
+				/>
 			</div>
 			<div class="chips" id="filterChips">
 				<button class="chip" data-key="all" aria-pressed="false">All</button><button
@@ -134,7 +151,7 @@
 				>
 			</div>
 		</div>
-		{#if loading || patternData.length === 0}
+		{#if loading || allPatterns.length === 0}
 			<div class="empty flex flex-col items-center justify-center py-16 text-center">
 				<BrandIcon fill="gray" />
 				<h2 class="title-text pb-4 text-2xl font-bold">Your pattern box is empty</h2>
@@ -145,6 +162,12 @@
 				<button class="btn btn-primary" id="newBtn" onclick={createNewPattern}
 					>Start a Pattern</button
 				>
+			</div>
+		{:else if patternData.length === 0}
+			<div class="empty flex flex-col items-center justify-center py-16 text-center">
+				<BrandIcon fill="gray" />
+				<h2 class="title-text pb-4 text-2xl font-bold">No patterns match this search</h2>
+				<p class="pb-6 text-sm leading-relaxed">Search patterns by title, yarn weight and tags.</p>
 			</div>
 		{:else}
 			<div class="grid">
