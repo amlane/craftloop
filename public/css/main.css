@@ -19,6 +19,7 @@
 
 :root {
 	--main-font: 'Karla', sans-serif;
+	--accent-font: 'Fraunces', Georgia, serif;
 	--paper: #f5efdc;
 	--card: #fffcf4;
 	--ink: #2b2318;
@@ -169,7 +170,7 @@ button {
 }
 
 .display {
-	font-family: 'Fraunces', Georgia, serif;
+	font-family: var(--accent-font);
 	font-weight: 600;
 	text-wrap: balance;
 }

@@ -3,9 +3,9 @@
 </script>
 
 <div class="flex items-center justify-center">
-	<div class="mr-2">
+	<a class="mr-2" href="/">
 		<BrandIcon fill="coral" />
-	</div>
+	</a>
 	<div class="brand-text">
 		<h1 class="name display">craftloop</h1>
 		<p class="tag">your pattern box</p>
