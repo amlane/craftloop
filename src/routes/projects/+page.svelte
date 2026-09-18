@@ -166,8 +166,8 @@
 		{:else if patternData.length === 0}
 			<div class="empty flex flex-col items-center justify-center py-16 text-center">
 				<BrandIcon fill="gray" />
-				<h2 class="title-text pb-4 text-2xl font-bold">No patterns match this search</h2>
-				<p class="pb-6 text-sm leading-relaxed">Search patterns by title, yarn weight and tags.</p>
+				<h2 class="title-text pb-4 text-2xl font-bold">No matches</h2>
+				<p class="pb-6 text-sm leading-relaxed">Try a different search or filter.</p>
 			</div>
 		{:else}
 			<div class="grid">
@@ -199,7 +199,7 @@
 							{/if}
 							{#if p.tags?.length}
 								<div class="card-tags">
-									{#each p.tags.slice(0, 4) as tag}
+									{#each p.tags.slice(0, 4) as tag (tag)}
 										<span class="tag-pill">{tag}</span>
 									{/each}
 								</div>
