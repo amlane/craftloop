@@ -130,7 +130,7 @@
 					<PlusIcon />
 					New pattern
 				</button>
-				<a class="btn btn-secondary" id="newBtn" href="/profile">Profile</a>
+				<a class="btn btn-secondary" id="newBtn" href={resolve('/profile')}>Profile</a>
 			</div>
 		</div>
 	</header>
@@ -181,7 +181,7 @@
 		{:else}
 			<div class="grid">
 				{#each patternData as p (p.id)}
-					<a class="card" href="/pattern/{p.id}">
+					<a class="card" href={resolve(`/pattern/${p.id}`)}>
 						<div class="card-photo">
 							{#if p.photos?.[0]?.url}
 								<img src={p.photos[0].url} alt="" />
