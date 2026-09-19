@@ -48,6 +48,13 @@ body {
 	font-family: var(--main-font);
 	background: var(--paper);
 	color: var(--ink-soft);
+	/* padding-inline: 30px; */
+}
+
+.top-bar,
+.projects,
+.pattern-page .detail,
+.profile {
 	padding-inline: 30px;
 }
 

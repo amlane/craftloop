@@ -270,19 +270,6 @@
 						</button>
 					{/each}
 				</div>
-				{#if confirmingDelete}
-					<div class="confirm-row">
-						Delete this pattern?
-						<button class="btn btn-sm btn-danger" onclick={handleDelete}>Delete</button>
-						<button class="btn btn-sm btn-ghost" onclick={() => (confirmingDelete = false)}
-							>Cancel</button
-						>
-					</div>
-				{:else}
-					<button class="btn btn-sm btn-ghost" onclick={() => (confirmingDelete = true)}
-						>Delete</button
-					>
-				{/if}
 			</div>
 		</div>
 
@@ -446,19 +433,36 @@
 
 	<div class="savebar">
 		<div class="savebar-inner">
-			<span class="save-status {saveStatusClass}">
-				<span class="dot"></span>
-				{#if saveState === 'saving'}
-					Saving…
-				{:else if saveState === 'error'}
-					Couldn't save — try again
-				{:else if hasUnsavedChanges}
-					Unsaved changes
+			<div>
+				{#if confirmingDelete}
+					<div class="confirm-row">
+						Delete this pattern?
+						<button class="btn btn-sm btn-danger" onclick={handleDelete}>Delete</button>
+						<button class="btn btn-sm btn-ghost" onclick={() => (confirmingDelete = false)}
+							>Cancel</button
+						>
+					</div>
 				{:else}
-					Saved
+					<button class="btn btn-sm btn-ghost" onclick={() => (confirmingDelete = true)}
+						>Delete</button
+					>
 				{/if}
-			</span>
-			<button class="btn btn-primary" onclick={handleSave}>Save</button>
+			</div>
+			<div class="flex">
+				<span class="save-status {saveStatusClass}">
+					<span class="dot"></span>
+					{#if saveState === 'saving'}
+						Saving…
+					{:else if saveState === 'error'}
+						Couldn't save — try again
+					{:else if hasUnsavedChanges}
+						Unsaved changes
+					{:else}
+						Saved
+					{/if}
+				</span>
+				<button class="btn btn-primary" onclick={handleSave}>Save</button>
+			</div>
 		</div>
 	</div>
 </div>
@@ -482,6 +486,7 @@
 		text-decoration: none;
 		cursor: pointer;
 		padding: 8px 0 6px;
+		margin-left: 25px;
 	}
 	.back:hover {
 		color: var(--ink);
@@ -929,6 +934,7 @@
 		display: flex;
 		align-items: center;
 		gap: 7px;
+		margin-right: 20px;
 	}
 	.save-status .dot {
 		width: 7px;

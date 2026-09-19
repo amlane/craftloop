@@ -63,7 +63,7 @@
 	{#if loading}
 		<p>Loading...</p>
 	{:else}
-		<div class="pt-8">
+		<div class="profile pt-8">
 			<div class="mb-4">
 				<p class="title-text">Username</p>
 				<p>{username}</p>
