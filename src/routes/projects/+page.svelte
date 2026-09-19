@@ -12,7 +12,6 @@
 
 	let data = $state.snapshot(null);
 	let allPatterns = $state([]);
-	let patternData = $state([]);
 	let loading = $state(true);
 	onMount(() => {
 		if (browser) {
@@ -33,7 +32,6 @@
 					} catch (error) {
 						console.error('Failed to fetch:', error);
 					} finally {
-						patternData = data.user.patterns;
 						allPatterns = data.user.patterns;
 						loading = false;
 					}
@@ -45,13 +43,16 @@
 	});
 
 	let searchText = $state('');
+	let statusFilter = $state('all');
 
-	function filterPatterns() {
-		let q = event.target.value.toLowerCase().trim();
-		patternData = allPatterns.filter((val) => {
-			return [val.title, val.yarnWeight, ...(val.tags ?? [])].join(' ').toLowerCase().includes(q);
-		});
-	}
+	let patternData = $derived(
+		allPatterns.filter((p) => {
+			if (statusFilter !== 'all' && p.status !== statusFilter) return false;
+			const q = searchText.toLowerCase().trim();
+			if (!q) return true;
+			return [p.title, p.yarnWeight, ...(p.tags ?? [])].join(' ').toLowerCase().includes(q);
+		})
+	);
 
 	function timeAgo(timestamp) {
 		const now = new Date();
@@ -75,6 +76,11 @@
 	function statusInfo(key) {
 		return STATUS_INFO[key] ?? STATUS_INFO.draft;
 	}
+
+	const FILTER_CHIPS = [
+		{ key: 'all', label: 'All', color: null },
+		...Object.entries(STATUS_INFO).map(([key, s]) => ({ key, label: s.label, color: s.color }))
+	];
 
 	// Deterministic placeholder gradient for patterns without a photo yet,
 	// so cards don't all look identical while photos aren't wired up.
@@ -136,21 +142,22 @@
 					id="searchInput"
 					type="text"
 					placeholder="Search patterns, yarn, tags…"
-					value={searchText}
-					oninput={filterPatterns}
+					bind:value={searchText}
 				/>
 			</div>
 			<div class="chips" id="filterChips">
-				<button class="chip" data-key="all" aria-pressed="false">All</button><button
-					class="chip"
-					data-key="draft"
-					aria-pressed="false"
-					><span class="dot" style="background:var(--mustard)"></span>Draft</button
-				><button class="chip" data-key="tested" aria-pressed="false"
-					><span class="dot" style="background:var(--teal)"></span>Tested</button
-				><button class="chip" data-key="done" aria-pressed="true"
-					><span class="dot" style="background:var(--plum)"></span>Done</button
-				>
+				{#each FILTER_CHIPS as chip (chip.key)}
+					<button
+						class="chip"
+						type="button"
+						data-key={chip.key}
+						aria-pressed={statusFilter === chip.key}
+						onclick={() => (statusFilter = chip.key)}
+					>
+						{#if chip.color}<span class="dot" style="background:{chip.color}"></span>{/if}
+						{chip.label}
+					</button>
+				{/each}
 			</div>
 		</div>
 		{#if loading || allPatterns.length === 0}
