@@ -2,12 +2,14 @@
 	import Brand from '../brand.svelte';
 	import PlusIcon from '../plus-icon.svelte';
 	import BrandIcon from '../brand-icon.svelte';
+	import SearchIcon from '../search-icon.svelte';
 
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
-	import SearchIcon from '../search-icon.svelte';
+	import { PUBLIC_API_URL } from '$env/static/public';
+
 	let data = $state.snapshot(null);
 	let allPatterns = $state([]);
 	let patternData = $state([]);
@@ -19,7 +21,7 @@
 				async function fetchData() {
 					try {
 						const userId = JSON.parse(atob(jwtToken.split('.')[1]))['subject'];
-						const response = await fetch(`http://localhost:8000/api/users/${userId}/patterns`, {
+						const response = await fetch(`${PUBLIC_API_URL}/api/users/${userId}/patterns`, {
 							method: 'GET',
 							headers: {
 								'Content-Type': 'application/json',
@@ -91,7 +93,7 @@
 			if (browser) {
 				jwt = localStorage.getItem('token');
 			}
-			const response = await fetch('http://localhost:8000/api/patterns', {
+			const response = await fetch(`${PUBLIC_API_URL}/api/patterns`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

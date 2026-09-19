@@ -2,6 +2,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { browser } from '$app/environment';
+	import { PUBLIC_API_URL } from '$env/static/public';
 
 	let username = $state('');
 	let password = $state('');
@@ -10,7 +11,7 @@
 
 	async function sendData() {
 		try {
-			const response = await fetch('http://localhost:8000/api/auth/login', {
+			const response = await fetch(`${PUBLIC_API_URL}/api/auth/login`, {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json'

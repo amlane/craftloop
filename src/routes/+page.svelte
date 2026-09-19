@@ -4,7 +4,6 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import Brand from './brand.svelte';
-	import Login from './login.svelte';
 
 	onMount(() => {
 		// if valid session token, redirect user to projects page

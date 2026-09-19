@@ -4,6 +4,7 @@
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import { PUBLIC_API_URL } from '$env/static/public';
 
 	import Brand from '../../brand.svelte';
 	import ChevronLeftIcon from '../../chevron-left-icon.svelte';
@@ -92,7 +93,7 @@
 				async function fetchData() {
 					try {
 						const patternId = page.params.id;
-						const response = await fetch(`http://localhost:8000/api/patterns/${patternId}`, {
+						const response = await fetch(`${PUBLIC_API_URL}/api/patterns/${patternId}`, {
 							method: 'GET',
 							headers: {
 								'Content-Type': 'application/json',
@@ -186,7 +187,7 @@
 				jwt = localStorage.getItem('token');
 			}
 			const payload = JSON.stringify(pattern);
-			const response = await fetch(`http://localhost:8000/api/patterns/${pattern.id}`, {
+			const response = await fetch(`${PUBLIC_API_URL}/api/patterns/${pattern.id}`, {
 				method: 'PUT',
 				headers: {
 					'Content-Type': 'application/json',
@@ -216,7 +217,7 @@
 			if (browser) {
 				jwt = localStorage.getItem('token');
 			}
-			const response = await fetch(`http://localhost:8000/api/patterns/${pattern.id}`, {
+			const response = await fetch(`${PUBLIC_API_URL}/api/patterns/${pattern.id}`, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',

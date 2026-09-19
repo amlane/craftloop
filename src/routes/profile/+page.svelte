@@ -3,6 +3,8 @@
 	import { resolve } from '$app/paths';
 	import { onMount } from 'svelte';
 	import { browser } from '$app/environment';
+	import { PUBLIC_API_URL } from '$env/static/public';
+
 	import Brand from '../brand.svelte';
 
 	function logout() {
@@ -22,7 +24,7 @@
 				async function fetchData() {
 					try {
 						// Pass headers in the configuration object
-						const response = await fetch('http://localhost:8000/api/users/me', {
+						const response = await fetch(`${PUBLIC_API_URL}/api/users/me`, {
 							method: 'GET',
 							headers: {
 								'Content-Type': 'application/json',
