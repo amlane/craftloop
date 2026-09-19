@@ -1,5 +1,6 @@
 <script>
 	import { page } from '$app/state';
+	import { resolve } from '$app/paths';
 	import Brand from '../routes/brand.svelte';
 	import BrandIcon from '../routes/brand-icon.svelte';
 </script>
@@ -9,8 +10,10 @@
 		<div class="brand flex justify-between">
 			<Brand />
 			<div class="flex items-center">
-				<a class="btn btn-primary mr-2" id="newBtn" href="/projects"> Back to Projects </a>
-				<a class="btn btn-secondary" id="newBtn" href="/profile">Profile</a>
+				<a class="btn btn-primary mr-2" id="newBtn" href={resolve('/projects')}>
+					Back to Projects
+				</a>
+				<a class="btn btn-secondary" id="newBtn" href={resolve('/profile')}>Profile</a>
 			</div>
 		</div>
 	</header>

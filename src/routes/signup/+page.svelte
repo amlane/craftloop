@@ -94,7 +94,7 @@
 			{#if errorMessage}
 				<span style="color:red;">{errorMessage}</span>
 			{/if}
-			<p>Already have an account? <a href="/login" class="styled-link">Log in</a>.</p>
+			<p>Already have an account? <a href={resolve('/login')} class="styled-link">Log in</a>.</p>
 		</form>
 	</div>
 </div>

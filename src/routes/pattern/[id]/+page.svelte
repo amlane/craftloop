@@ -245,7 +245,7 @@
 		</div>
 	</header>
 
-	<a class="back" href="/projects">
+	<a class="back" href={resolve('/projects')}>
 		<ChevronLeftIcon />
 		All patterns
 	</a>

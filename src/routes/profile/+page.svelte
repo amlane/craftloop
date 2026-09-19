@@ -53,7 +53,9 @@
 		<div class="brand flex justify-between">
 			<Brand />
 			<div class="flex items-center">
-				<a class="btn btn-primary mr-2" id="newBtn" href="/projects"> Back to Projects </a>
+				<a class="btn btn-primary mr-2" id="newBtn" href={resolve('/projects')}>
+					Back to Projects
+				</a>
 				<button onclick={logout} class="logout btn btn-secondary" id="logoutBtn">Logout</button>
 			</div>
 		</div>

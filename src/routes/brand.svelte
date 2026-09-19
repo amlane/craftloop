@@ -1,9 +1,10 @@
 <script>
+	import { resolve } from '$app/paths';
 	import BrandIcon from './brand-icon.svelte';
 </script>
 
 <div class="flex items-center justify-center">
-	<a class="mr-2" href="/">
+	<a class="mr-2" href={resolve('/')}>
 		<BrandIcon fill="coral" />
 	</a>
 	<div class="brand-text">

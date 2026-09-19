@@ -20,8 +20,8 @@
 	<div class="brand flex justify-between">
 		<Brand />
 		<div class="flex items-center">
-			<a class="btn btn-primary mr-2" id="login" href="/login">Login</a>
-			<a class="btn btn-secondary" id="signup" href="/signup">Sign up</a>
+			<a class="btn btn-primary mr-2" id="login" href={resolve('/login')}>Login</a>
+			<a class="btn btn-secondary" id="signup" href={resolve('/signup')}>Sign up</a>
 		</div>
 	</div>
 </header>
@@ -37,8 +37,8 @@
 		</p>
 	</div>
 	<div class="flex items-center py-8">
-		<a class="btn btn-secondary mr-2" id="signup" href="/signup">Sign up Free</a>
-		<a class="btn btn-primary" id="login" href="/login">Login</a>
+		<a class="btn btn-secondary mr-2" id="signup" href={resolve('/signup')}>Sign up Free</a>
+		<a class="btn btn-primary" id="login" href={resolve('/login')}>Login</a>
 	</div>
 	<div>PLACEHOLDER FOR ASSETS</div>
 	<div>
