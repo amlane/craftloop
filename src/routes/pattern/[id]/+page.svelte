@@ -8,6 +8,7 @@
 
 	import Brand from '../../brand.svelte';
 	import ChevronLeftIcon from '../../chevron-left-icon.svelte';
+	import { SUPPLY_TYPES } from '$lib/pattern-constants.js';
 
 	const WEIGHTS = [
 		'Lace (0)',
@@ -34,6 +35,14 @@
 		return { id: uid(), label: `${type || 'Row'} ${n || 1}`, instructions: '', count: '' };
 	}
 
+	function emptyYarn() {
+		return { id: uid(), colorway: '', brand: '', weight: null };
+	}
+
+	function emptySupply() {
+		return { id: uid(), supply_type: SUPPLY_TYPES[0].key, detail: '' };
+	}
+
 	function emptySection(type = 'Row') {
 		return {
 			id: uid(),
@@ -48,10 +57,8 @@
 	let pattern = $state({
 		title: '',
 		status: 'draft',
-		yarnBrand: '',
-		yarnColorway: '',
-		yarnWeight: WEIGHTS[4],
-		hook: '',
+		yarns: [],
+		supplies: [],
 		gauge: '',
 		finishedSize: '',
 		tags: [],
@@ -144,6 +151,22 @@
 
 	function removeTag(index) {
 		pattern.tags.splice(index, 1);
+	}
+
+	function addYarn() {
+		pattern.yarns.push(emptyYarn());
+	}
+
+	function removeYarn(index) {
+		pattern.yarns.splice(index, 1);
+	}
+
+	function addSupply() {
+		pattern.supplies.push(emptySupply());
+	}
+
+	function removeSupply(index) {
+		pattern.supplies.splice(index, 1);
 	}
 
 	function addSection() {
@@ -275,36 +298,6 @@
 
 		<div class="field-grid">
 			<div class="field">
-				<label for="yarnBrand">Yarn brand</label>
-				<input
-					id="yarnBrand"
-					type="text"
-					placeholder="e.g. Lion Brand"
-					bind:value={pattern.yarnBrand}
-				/>
-			</div>
-			<div class="field">
-				<label for="yarnColorway">Colorway</label>
-				<input
-					id="yarnColorway"
-					type="text"
-					placeholder="e.g. Marigold"
-					bind:value={pattern.yarnColorway}
-				/>
-			</div>
-			<div class="field">
-				<label for="yarnWeight">Weight</label>
-				<select id="yarnWeight" bind:value={pattern.yarnWeight}>
-					{#each WEIGHTS as w (w)}
-						<option value={w}>{w}</option>
-					{/each}
-				</select>
-			</div>
-			<div class="field">
-				<label for="hook">Hook size</label>
-				<input id="hook" type="text" placeholder="e.g. H-8 (5.0 mm)" bind:value={pattern.hook} />
-			</div>
-			<div class="field">
 				<label for="gauge">Gauge</label>
 				<input
 					id="gauge"
@@ -322,6 +315,62 @@
 					bind:value={pattern.finishedSize}
 				/>
 			</div>
+		</div>
+
+		<div class="list-field">
+			<h3 class="section-label">Yarn</h3>
+			{#if pattern.yarns.length === 0}
+				<div class="banner">No yarn added yet — add each color and brand you're using.</div>
+			{:else}
+				<div class="list-rows">
+					{#each pattern.yarns as yarn, i (yarn.id)}
+						<div class="list-row yarn-row">
+							<input
+								class="mono"
+								placeholder="Colorway, e.g. Marigold"
+								bind:value={yarn.colorway}
+							/>
+							<input placeholder="Brand, e.g. Lion Brand" bind:value={yarn.brand} />
+							<select bind:value={yarn.weight}>
+								<option value={null}>Weight</option>
+								{#each WEIGHTS as w (w)}
+									<option value={w}>{w}</option>
+								{/each}
+							</select>
+							<button class="rm" aria-label="Remove yarn" onclick={() => removeYarn(i)}
+								>&times;</button
+							>
+						</div>
+					{/each}
+				</div>
+			{/if}
+			<button class="btn btn-sm" onclick={addYarn}>+ Add yarn</button>
+		</div>
+
+		<div class="list-field">
+			<h3 class="section-label">Supplies</h3>
+			{#if pattern.supplies.length === 0}
+				<div class="banner">
+					No supplies added yet — hook, yarn needle, scissors, stitch markers…
+				</div>
+			{:else}
+				<div class="list-rows">
+					{#each pattern.supplies as supply, i (supply.id)}
+						<div class="list-row supply-row">
+							<select bind:value={supply.supply_type}>
+								{#each SUPPLY_TYPES as t (t.key)}
+									<option value={t.key}>{t.label}</option>
+								{/each}
+							</select>
+							<input placeholder="e.g. H-8 (5.0 mm)" bind:value={supply.detail} />
+							<button class="rm" aria-label="Remove supply" onclick={() => removeSupply(i)}
+								>&times;</button
+							>
+						</div>
+					{/each}
+				</div>
+			{/if}
+			<button class="btn btn-sm" onclick={addSupply}>+ Add supply</button>
 		</div>
 
 		<div class="tags-field">
@@ -573,7 +622,7 @@
 
 	.field-grid {
 		display: grid;
-		grid-template-columns: repeat(3, 1fr);
+		grid-template-columns: repeat(2, 1fr);
 		gap: 16px 20px;
 		margin-bottom: 26px;
 	}
@@ -621,6 +670,57 @@
 		text-transform: uppercase;
 		color: var(--ink-soft);
 		margin: 0 0 10px;
+	}
+
+	.list-field {
+		margin-bottom: 26px;
+	}
+	.list-rows {
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		margin-bottom: 10px;
+	}
+	.list-row {
+		display: grid;
+		gap: 8px;
+		align-items: center;
+	}
+	.yarn-row {
+		grid-template-columns: 1fr 1fr 160px 30px;
+	}
+	.supply-row {
+		grid-template-columns: 160px 1fr 30px;
+	}
+	.list-row input,
+	.list-row select {
+		border: 1px solid var(--line);
+		border-radius: 6px;
+		background: var(--card);
+		color: var(--ink);
+		padding: 7px 9px;
+		font-size: 0.88rem;
+		font-family: 'Karla', sans-serif;
+	}
+	.list-row input.mono {
+		font-family: 'IBM Plex Mono', monospace;
+	}
+	.list-row input::placeholder {
+		font-style: italic;
+		color: var(--ink-soft);
+		opacity: 0.7;
+	}
+	.list-row .rm {
+		border: none;
+		background: none;
+		color: var(--ink-soft);
+		cursor: pointer;
+		font-size: 1rem;
+		padding: 6px;
+		line-height: 1;
+	}
+	.list-row .rm:hover {
+		color: var(--danger);
 	}
 
 	.tags-field {
@@ -953,9 +1053,6 @@
 	}
 
 	@media (max-width: 640px) {
-		.field-grid {
-			grid-template-columns: 1fr 1fr;
-		}
 		.entry {
 			grid-template-columns: 1fr;
 		}
@@ -974,6 +1071,12 @@
 		}
 		.head-actions {
 			justify-content: space-between;
+		}
+		.yarn-row {
+			grid-template-columns: 1fr;
+		}
+		.supply-row {
+			grid-template-columns: 1fr;
 		}
 	}
 	@media (max-width: 420px) {

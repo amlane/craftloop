@@ -3,6 +3,7 @@
 	import PlusIcon from '../plus-icon.svelte';
 	import BrandIcon from '../brand-icon.svelte';
 	import SearchIcon from '../search-icon.svelte';
+	import { supplyTypeLabel } from '$lib/pattern-constants.js';
 
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
@@ -50,7 +51,13 @@
 			if (statusFilter !== 'all' && p.status !== statusFilter) return false;
 			const q = searchText.toLowerCase().trim();
 			if (!q) return true;
-			return [p.title, p.yarnWeight, ...(p.tags ?? [])].join(' ').toLowerCase().includes(q);
+			const yarnText = (p.yarns ?? []).flatMap((y) => [y.colorway, y.brand, y.weight]);
+			const supplyText = (p.supplies ?? []).flatMap((s) => [s.supply_type, s.detail]);
+			return [p.title, ...yarnText, ...supplyText, ...(p.tags ?? [])]
+				.filter(Boolean)
+				.join(' ')
+				.toLowerCase()
+				.includes(q);
 		})
 	);
 
@@ -75,6 +82,11 @@
 
 	function statusInfo(key) {
 		return STATUS_INFO[key] ?? STATUS_INFO.draft;
+	}
+
+	function supplySummary(supply) {
+		const label = supplyTypeLabel(supply.supply_type);
+		return supply.detail ? `${label} · ${supply.detail}` : label;
 	}
 
 	const FILTER_CHIPS = [
@@ -199,10 +211,22 @@
 							<p class="card-title display" class:untitled={!p.title}>
 								{p.title || 'Untitled pattern'}
 							</p>
-							{#if p.hook || p.yarnWeight || p.gauge}
+							{#if p.yarns?.length || p.supplies?.length || p.gauge}
 								<div class="card-meta mono">
-									{#if p.hook}<span>{p.hook}</span>{/if}
-									{#if p.yarnWeight}<span>{p.yarnWeight.replace(/\s*\(\d\)$/, '')}</span>{/if}
+									{#if p.yarns?.length}
+										<span
+											>{p.yarns[0].colorway || p.yarns[0].brand || 'Yarn'}{p.yarns.length > 1
+												? ` +${p.yarns.length - 1}`
+												: ''}</span
+										>
+									{/if}
+									{#if p.supplies?.length}
+										<span
+											>{supplySummary(p.supplies[0])}{p.supplies.length > 1
+												? ` +${p.supplies.length - 1}`
+												: ''}</span
+										>
+									{/if}
 									{#if p.gauge}<span>{p.gauge}</span>{/if}
 								</div>
 							{/if}
