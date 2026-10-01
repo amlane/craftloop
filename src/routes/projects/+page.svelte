@@ -30,15 +30,17 @@
 						});
 
 						data = await response.json();
+						allPatterns = data.user.patterns;
 					} catch (error) {
 						console.error('Failed to fetch:', error);
 					} finally {
-						allPatterns = data.user.patterns;
 						loading = false;
 					}
 				}
 
 				fetchData();
+			} else {
+				loading = false;
 			}
 		}
 	});
@@ -172,7 +174,12 @@
 				{/each}
 			</div>
 		</div>
-		{#if loading || allPatterns.length === 0}
+		{#if loading}
+			<div class="empty flex flex-col items-center justify-center py-16 text-center">
+				<span class="spinner"></span>
+				<p class="pt-4 text-sm leading-relaxed">Loading your patterns…</p>
+			</div>
+		{:else if allPatterns.length === 0}
 			<div class="empty flex flex-col items-center justify-center py-16 text-center">
 				<BrandIcon fill="gray" />
 				<h2 class="title-text pb-4 text-2xl font-bold">Your pattern box is empty</h2>
@@ -249,6 +256,19 @@
 </div>
 
 <style>
+	.spinner {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		border: 3px solid var(--line);
+		border-top-color: var(--ink-soft);
+		animation: spin 0.7s linear infinite;
+	}
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
+	}
 	.grid {
 		display: grid;
 		grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));

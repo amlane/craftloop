@@ -292,7 +292,6 @@
 
 <style>
 	.profile-page {
-		/* max-width: 640px; */
 		margin: 0 auto;
 		padding-bottom: 60px;
 	}
