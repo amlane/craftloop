@@ -190,16 +190,105 @@
 		pattern.sections[sectionIndex].entries.splice(entryIndex, 1);
 	}
 
-	function addPhoto(e) {
+	// Photos upload to Cloudinary and persist immediately (not part of the
+	// pattern's draft/Save flow), so success here also resets savedSnapshot -
+	// otherwise the savebar would claim "Unsaved changes" for something
+	// that's already saved.
+	let uploadingPhoto = $state(false);
+	let photoError = $state('');
+
+	async function addPhoto(e) {
 		const file = e.target.files?.[0];
-		if (!file) return;
-		pattern.photos.push({ id: uid(), url: URL.createObjectURL(file), caption: '' });
 		e.target.value = '';
+		if (!file) return;
+
+		uploadingPhoto = true;
+		photoError = '';
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const formData = new FormData();
+			formData.append('photo', file);
+
+			const response = await fetch(`${PUBLIC_API_URL}/api/patterns/${pattern.id}/photos`, {
+				method: 'POST',
+				headers: { Authorization: 'Bearer ' + jwt },
+				body: formData
+			});
+
+			const resData = await response.json();
+			if (response.ok) {
+				pattern.photos.push(resData);
+				savedSnapshot = snapshotOf(pattern);
+			} else {
+				photoError = resData.message || "Couldn't upload photo — try again";
+			}
+		} catch (error) {
+			console.error(error);
+			photoError = "Couldn't upload photo — try again";
+		} finally {
+			uploadingPhoto = false;
+		}
 	}
 
-	function removePhoto(index) {
-		const [removed] = pattern.photos.splice(index, 1);
-		if (removed) URL.revokeObjectURL(removed.url);
+	async function removePhoto(index) {
+		const photo = pattern.photos[index];
+		if (!photo) return;
+
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const response = await fetch(
+				`${PUBLIC_API_URL}/api/patterns/${pattern.id}/photos/${photo.id}`,
+				{
+					method: 'DELETE',
+					headers: { Authorization: 'Bearer ' + jwt }
+				}
+			);
+
+			if (response.ok) {
+				pattern.photos.splice(index, 1);
+				savedSnapshot = snapshotOf(pattern);
+			} else {
+				photoError = "Couldn't remove photo — try again";
+			}
+		} catch (error) {
+			console.error(error);
+			photoError = "Couldn't remove photo — try again";
+		}
+	}
+
+	async function saveCaption(photo) {
+		try {
+			let jwt = '';
+			if (browser) {
+				jwt = localStorage.getItem('token');
+			}
+			const response = await fetch(
+				`${PUBLIC_API_URL}/api/patterns/${pattern.id}/photos/${photo.id}`,
+				{
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+						Authorization: 'Bearer ' + jwt
+					},
+					body: JSON.stringify({ caption: photo.caption })
+				}
+			);
+
+			if (response.ok) {
+				savedSnapshot = snapshotOf(pattern);
+			} else {
+				photoError = "Couldn't save caption — try again";
+			}
+		} catch (error) {
+			console.error(error);
+			photoError = "Couldn't save caption — try again";
+		}
 	}
 
 	async function handleSave() {
@@ -457,25 +546,46 @@
 			bind:value={pattern.notes}></textarea>
 
 		<h3 class="section-label">Photos</h3>
+		{#if photoError}
+			<div class="banner banner-error">{photoError}</div>
+		{/if}
 		<div class="photos-grid">
 			{#each pattern.photos as photo, i (photo.id)}
 				<div class="photo-tile">
 					<img src={photo.url} alt="" />
 					<div class="cap-row">
-						<input placeholder="Caption" bind:value={photo.caption} />
+						<input
+							placeholder="Caption"
+							bind:value={photo.caption}
+							onblur={() => saveCaption(photo)}
+						/>
 						<button class="rm" aria-label="Remove photo" onclick={() => removePhoto(i)}
 							>&times;</button
 						>
 					</div>
 				</div>
 			{/each}
-			<label class="add-photo">
-				<svg viewBox="0 0 24 24" fill="none"
-					><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-					></path></svg
-				>
-				<span>Add photo</span>
-				<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" onchange={addPhoto} />
+			<label class="add-photo" class:uploading={uploadingPhoto}>
+				{#if uploadingPhoto}
+					<span class="spinner"></span>
+					<span>Uploading…</span>
+				{:else}
+					<svg viewBox="0 0 24 24" fill="none"
+						><path
+							d="M12 5v14M5 12h14"
+							stroke="currentColor"
+							stroke-width="2"
+							stroke-linecap="round"
+						></path></svg
+					>
+					<span>Add photo</span>
+				{/if}
+				<input
+					type="file"
+					accept="image/png,image/jpeg,image/webp,image/gif"
+					disabled={uploadingPhoto}
+					onchange={addPhoto}
+				/>
 			</label>
 		</div>
 	</div>
@@ -774,6 +884,9 @@
 		color: var(--ink-soft);
 		margin-bottom: 16px;
 	}
+	.banner-error {
+		border-left-color: var(--danger);
+	}
 
 	.section-block {
 		border: 1px solid var(--line);
@@ -1006,6 +1119,22 @@
 	}
 	.add-photo input {
 		display: none;
+	}
+	.add-photo.uploading {
+		cursor: default;
+	}
+	.spinner {
+		width: 18px;
+		height: 18px;
+		border-radius: 50%;
+		border: 2px solid var(--line);
+		border-top-color: var(--ink-soft);
+		animation: spin 0.7s linear infinite;
+	}
+	@keyframes spin {
+		to {
+			transform: rotate(360deg);
+		}
 	}
 
 	.savebar {
